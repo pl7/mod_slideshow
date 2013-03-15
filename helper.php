@@ -96,33 +96,36 @@ abstract class modSlideShowHelper
 			if ($params->get('show_child_category_articles', 0) && (int) $params->get('levels', 0) > 0) {
 				// Get an instance of the generic categories model
 				$categories = JModelLegacy::getInstance('Categories', 'ContentModel', array('ignore_request' => true));
-				$categories->setState('params', $appParams);
-				$levels = $params->get('levels', 1) ? $params->get('levels', 1) : 9999;
-				$categories->setState('filter.get_children', $levels);
-				$categories->setState('filter.published', 1);
-				$categories->setState('filter.access', $access);
-				$additional_catids = array();
+        if(is_object($categories)){
+        
+          $categories->setState('params', $appParams);
+          $levels = $params->get('levels', 1) ? $params->get('levels', 1) : 9999;
+          $categories->setState('filter.get_children', $levels);
+          $categories->setState('filter.published', 1);
+          $categories->setState('filter.access', $access);
+          $additional_catids = array();
 
-				foreach($catids as $catid)
-				{
-					$categories->setState('filter.parentId', $catid);
-					$recursive = true;
-					$items = $categories->getItems($recursive);
+          foreach($catids as $catid)
+          {
+            $categories->setState('filter.parentId', $catid);
+            $recursive = true;
+            $items = $categories->getItems($recursive);
 
-					if ($items)
-					{
-						foreach($items as $category)
-						{
-							$condition = (($category->level - $categories->getParent()->level) <= $levels);
-							if ($condition) {
-								$additional_catids[] = $category->id;
-							}
+            if ($items)
+            {
+              foreach($items as $category)
+              {
+                $condition = (($category->level - $categories->getParent()->level) <= $levels);
+                if ($condition) {
+                  $additional_catids[] = $category->id;
+                }
 
-						}
-					}
-				}
+              }
+            }
+          }
 
-				$catids = array_unique(array_merge($catids, $additional_catids));
+          $catids = array_unique(array_merge($catids, $additional_catids));
+        } // is_object
 			}
 
 			$articles->setState('filter.category_id', $catids);

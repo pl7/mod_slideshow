@@ -78,12 +78,12 @@ defined('_JEXEC') or die;
 			<?php echo $item->displayIntrotext; ?>
 			</p>
 		<?php endif; ?>
-
+		<?php echo $params->get('show_readmore'); ?>
 		<?php if ($params->get('show_readmore')) :?>
 			<p class="mod-articles-category-readmore">
 				<a class="mod-articles-category-title <?php echo $item->active; ?>" href="<?php echo $item->link; ?>">
 				<?php if ($item->params->get('access-view')== FALSE) :
-						echo JText::_('MOD_ARTICLES_CATEGORY_REGISTER_TO_READ_MORE');
+						echo JText::_('MOD_SLIDESHOW_REGISTER_TO_READ_MORE');
 					elseif ($readmore = $item->alternative_readmore) :
 						echo $readmore;
 						echo JHtml::_('string.truncate', $item->title, $params->get('readmore_limit'));
@@ -91,10 +91,10 @@ defined('_JEXEC') or die;
 							echo JHtml::_('string.truncate', ($this->item->title), $params->get('readmore_limit'));
 						endif;
 					elseif ($params->get('show_readmore_title', 0) == 0) :
-						echo JText::sprintf('MOD_ARTICLES_CATEGORY_READ_MORE_TITLE');
+						echo JText::sprintf('MOD_SLIDESHOW_READ_MORE_TITLE');
 					else :
 
-						echo JText::_('MOD_ARTICLES_CATEGORY_READ_MORE');
+						echo JText::_('MOD_SLIDESHOW_READ_MORE');
 						echo JHtml::_('string.truncate', ($item->title), $params->get('readmore_limit'));
 					endif; ?>
 	        </a>
@@ -107,14 +107,14 @@ defined('_JEXEC') or die;
 	<?php endforeach; ?>
 <?php else : ?>
     <?php $item_count = 1; ?>
-	<?php foreach ($list as $item) : ?>
+	<?php foreach ($list as $listItem) : ?>
 	<?php 
-	   $images = json_decode($item->images); 
+	   $images = json_decode($listItem->images); 
 	   $img_url = htmlspecialchars($images->image_intro);
 	   if(strlen($img_url) == 0)
 	       $img_url = '/images/bg/default_teaser.png';
 	?>
-		<div id="slideItem_<?php echo $item_count;?>" class="slideItem" style="background-image: url('<?php echo $img_url; ?>');">		  
+		<div id="slideItem_<?php echo $item_count;?>" class="slideItem" style="background-image: url('<?php echo $img_url; ?>');" category="<?php echo $listItem->catid;?>"> 
             <style type="text/css">
         	#slideItem_<?php echo $item_count;?>, .slideWindow .select_pos<?php echo $item_count;?> {
             	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='<?php echo $img_url; ?>', sizingMethod='scale');
@@ -123,70 +123,71 @@ defined('_JEXEC') or die;
         	</style>
     		<?php $item_count++ ?>
     		
+            <?php if($listItem->catid != 128) : ?>
             <div class="teaserText">
             
-        		<?php if ($item->displayCategoryTitle) :?>
+        		<?php if ($listItem->displayCategoryTitle) :?>
         			<span class="mod-articles-category-category">
-        			<?php echo $item->displayCategoryTitle; ?>
+        			<?php echo $listItem->displayCategoryTitle; ?>
         			</span>
         		<?php endif; ?>
                 
         	   	<h<?php echo $item_heading; ?>>
         	   	<?php if ($params->get('link_titles') == 1) : ?>
-        		<a class="mod-articles-category-title <?php echo $item->active; ?>" 
-        		  href="<?php echo JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catid)); ?>">
-        		<?php echo $item->title; ?>
-                <?php if ($item->displayHits) :?>
+        		<a class="mod-articles-category-title <?php echo $listItem->active; ?>" 
+        		  href="<?php echo JRoute::_(ContentHelperRoute::getArticleRoute($listItem->slug, $listItem->catid)); ?>">
+        		<?php echo $listItem->title; ?>
+                <?php if ($listItem->displayHits) :?>
         			<span class="mod-articles-category-hits">
-                    (<?php echo $item->displayHits; ?>)  </span>
+                    (<?php echo $listItem->displayHits; ?>)  </span>
                 <?php endif; ?></a>
                 <?php else :?>
-                <?php echo $item->title; ?>
-                	<?php if ($item->displayHits) :?>
+                <?php echo $listItem->title; ?>
+                	<?php if ($listItem->displayHits) :?>
         			<span class="mod-articles-category-hits">
-                    (<?php echo $item->displayHits; ?>)  </span>
+                    (<?php echo $listItem->displayHits; ?>)  </span>
                 <?php endif; ?></a>
                     <?php endif; ?>
                 </h<?php echo $item_heading; ?>>
                 
                	<?php if ($params->get('show_author')) :?>
                		<span class="mod-articles-category-writtenby">
-        			<?php echo $item->displayAuthorName; ?>
+        			<?php echo $listItem->displayAuthorName; ?>
         			</span>
         		<?php endif;?>
-        		<?php if ($item->displayDate) : ?>
-        			<span class="mod-articles-category-date"><?php echo $item->displayDate; ?></span>
+        		<?php if ($listItem->displayDate) : ?>
+        			<span class="mod-articles-category-date"><?php echo $listItem->displayDate; ?></span>
         		<?php endif; ?>
 
-        		<?php # if ($params->get('show_introtext')) :
-            		if (false) :
+        		<?php if ($params->get('show_introtext')) :
         		?>
-        			<a class="mod-articles-category-title <?php echo $item->active; ?>" 
-        			 href="<?php echo JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catid)); ?>">
+        			<a class="mod-articles-category-title <?php echo $listItem->active; ?>" 
+        			 href="<?php echo JRoute::_(ContentHelperRoute::getArticleRoute($listItem->slug, $listItem->catid)); ?>">
             			<p class="mod-articles-category-introtext">
-                			<?php echo $item->displayIntrotext; ?>
+                			<?php echo $listItem->displayIntrotext; ?>
             			</p>
         			</a>
         		<?php endif; ?>
         
         		<?php if ($params->get('show_readmore')) :?>
         			<p class="mod-articles-category-readmore">
-        				<a class="mod-articles-category-title <?php echo $item->active; ?>" href="<?php echo $item->link; ?>">
-        		        <?php if ($item->params->get('access-view')== FALSE) :
-        						echo JText::_('MOD_ARTICLES_CATEGORY_REGISTER_TO_READ_MORE');
-        					elseif ($readmore = $item->alternative_readmore) :
+        				<a class="mod-articles-category-title <?php echo $listItem->active; ?>" href="<?php echo $listItem->link; ?>">
+        		        <?php if ($listItem->params->get('access-view')== FALSE) :
+        						echo JText::_('MOD_SLIDESHOW_REGISTER_TO_READ_MORE');
+        					elseif ($readmore = $listItem->alternative_readmore) :
         						echo $readmore;
-        						echo JHtml::_('string.truncate', $item->title, $params->get('readmore_limit'));
+        						echo JHtml::_('string.truncate', $listItem->title, $params->get('readmore_limit'));
         					elseif ($params->get('show_readmore_title', 0) == 0) :
-        						echo JText::sprintf('MOD_ARTICLES_CATEGORY_READ_MORE_TITLE');
+        						echo JText::sprintf('MOD_SLIDESHOW_READ_MORE_TITLE');
         					else :
-        						echo JText::_('MOD_ARTICLES_CATEGORY_READ_MORE');
-        						echo JHtml::_('string.truncate', $item->title, $params->get('readmore_limit'));
+        						echo JText::_('MOD_SLIDESHOW_READ_MORE');
+        						echo JHtml::_('string.truncate', $listItem->title, $params->get('readmore_limit'));
         					endif; ?>
         	        </a>
         			</p>
         		<?php endif; ?>
             </div>
+        	<?php endif; ?>
 		</div><? // slideItem ?>
 	<?php endforeach; ?>
 <?php endif; ?>

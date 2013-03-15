@@ -15,7 +15,7 @@ function turnOnOffSlideShow() {
 	} else {
 		isSlide = true;
 	}
-	console.log('slider: '+isSlide);
+	//console.log('slider: '+isSlide);
 }
 
 function slideShow() {
@@ -84,7 +84,7 @@ function clickSlide(slidePos) {
 }
 
 function slideToPos(slidePos) {
-    console.log(slidePos);
+    //console.log(slidePos);
  	var slideObject = document.getElementById('slider');
 
 	curSlide = slidePos;

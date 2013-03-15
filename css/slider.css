@@ -44,9 +44,9 @@
     width: 2925px;
 	height: 315px;
 	
-    background-image: url("/images/icons/svw/svw_slider_bg.jpg");
+    background-image: url("/images/slideshow/svw_slideshow.jpg");
 	
-    background-position-x: 455px;
+    /*background-position-x: 455px;*/
     background-repeat: repeat-x;
     position: relative;
 	
